@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentinel — Pipeline Trace</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0e0e10; --surface: #18181b; --border: #27272a;
+    --text: #fafafa; --muted: #71717a;
+    --amber: #f59e0b; --amber-dim: rgba(245,158,11,0.12);
+    --green: #22c55e; --green-dim: rgba(34,197,94,0.12);
+    --red: #ef4444; --red-dim: rgba(239,68,68,0.12);
+    --blue: #3b82f6; --blue-dim: rgba(59,130,246,0.12);
+    --purple: #a78bfa; --purple-dim: rgba(167,139,250,0.12);
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; line-height: 1.6; padding: 32px 24px; }
+  .page-header { max-width: 1100px; margin: 0 auto 40px; }
+  .page-header h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.3px; }
+  .page-header p { color: var(--muted); font-size: 13px; margin-top: 6px; max-width: 620px; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; font-size: 12px; color: var(--muted); margin-top: 16px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .section-label { max-width: 1100px; margin: 0 auto 12px; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); padding-left: 2px; }
+  .section-label.secondary { margin-top: 40px; }
+  .journeys { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+  .journey { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .journey-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; cursor: pointer; user-select: none; }
+  .journey-header:hover { background: rgba(255,255,255,0.02); }
+  .journey-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .merchant { font-weight: 600; font-size: 15px; }
+  .product { color: var(--muted); font-size: 13px; }
+  .amount { font-family: 'DM Mono', monospace; font-size: 13px; }
+  .sbadge { font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 20px; letter-spacing: 0.3px; text-transform: uppercase; white-space: nowrap; }
+  .s1 { background: var(--red-dim); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+  .s2 { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
+  .s3 { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .s4 { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+  .s5 { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+  .chevron { color: var(--muted); font-size: 11px; transition: transform 0.2s; }
+  .journey.open .chevron { transform: rotate(180deg); }
+  .journey-body { display: none; padding: 0 20px 20px; }
+  .journey.open .journey-body { display: block; }
+  .sim-note { margin: 16px 0 8px; padding: 10px 14px; background: rgba(59,130,246,0.07); border: 1px solid rgba(59,130,246,0.18); border-radius: 8px; font-size: 12px; color: #93c5fd; font-family: 'DM Mono', monospace; line-height: 1.6; }
+  .sim-note strong { color: var(--blue); }
+  .timeline { margin-top: 16px; display: flex; flex-direction: column; }
+  .tl-item { display: grid; grid-template-columns: 106px 20px 1fr; gap: 0 12px; }
+  .tl-date { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); text-align: right; padding-top: 2px; padding-bottom: 22px; line-height: 1.4; }
+  .tl-spine { display: flex; flex-direction: column; align-items: center; }
+  .tl-node { width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 7px; z-index: 1; margin-top: 2px; }
+  .tl-line { width: 1px; flex: 1; min-height: 12px; background: var(--border); margin-top: 3px; }
+  .tl-item:last-child .tl-line { display: none; }
+  .tl-content { padding-bottom: 22px; }
+  .tl-label { font-weight: 500; font-size: 13px; padding-top: 1px; }
+  .tl-detail { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+  .tl-reason { font-size: 12px; margin-top: 8px; padding: 8px 12px; border-radius: 6px; font-family: 'DM Mono', monospace; line-height: 1.6; white-space: pre-line; }
+  .tag { display: inline-block; font-size: 10px; font-family: 'DM Mono', monospace; padding: 1px 5px; border-radius: 4px; margin-left: 6px; vertical-align: middle; background: #27272a; color: var(--muted); border: 1px solid #3f3f46; }
+  .ne { background: #27272a; border: 1.5px solid #3f3f46; color: #71717a; }
+  .ns { background: var(--blue-dim); border: 1.5px solid rgba(59,130,246,0.35); color: var(--blue); }
+  .nok { background: var(--green-dim); border: 1.5px solid rgba(34,197,94,0.35); color: var(--green); }
+  .nw { background: var(--amber-dim); border: 1.5px solid rgba(245,158,11,0.4); color: var(--amber); }
+  .nr { background: var(--red-dim); border: 1.5px solid rgba(239,68,68,0.4); color: var(--red); }
+  .rok { background: rgba(34,197,94,0.07); border: 1px solid rgba(34,197,94,0.2); color: #86efac; }
+  .rw { background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.2); color: #fcd34d; }
+  .rr { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.2); color: #fca5a5; }
+  .ri { background: rgba(59,130,246,0.07); border: 1px solid rgba(59,130,246,0.2); color: #93c5fd; }
+  .order-id-txt { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Sentinel — Pipeline Trace</h1>
+  <p>Each journey shows what email arrived, what state change it triggered, when overdue checks ran, and exactly why each alert fired or did not. All checks use the simulation date shown per journey, not today's real date.</p>
+  <div class="legend">
+    <div class="legend-item"><div class="dot" style="background:#52525b"></div> Email</div>
+    <div class="legend-item"><div class="dot" style="background:#3b82f6"></div> State change</div>
+    <div class="legend-item"><div class="dot" style="background:#22c55e"></div> All clear</div>
+    <div class="legend-item"><div class="dot" style="background:#f59e0b"></div> Warning</div>
+    <div class="legend-item"><div class="dot" style="background:#ef4444"></div> Alert fired</div>
+  </div>
+</div>
+
+<div class="section-label">Primary scenarios</div>
+<div class="journeys" id="primary"></div>
+<div class="section-label secondary">Additional scenarios</div>
+<div class="journeys" id="secondary"></div>
+
+<script>
+const primary = [
+  {
+    merchant:"TATA CLiQ", product:"boAt Rockerz 450 Bluetooth Headphones", orderId:"TCQ-141646921", amount:"₹1,799",
+    sc:"s1", sl:"Refund Overdue", open:true,
+    simDate:"04 Mar 2026",
+    simNote:"Simulation date = 04 Mar 2026. Refund was promised by 03 Mar (7 business days after pickup on 20 Feb). Today is 04 Mar — 1 day overdue. Alert fires immediately.",
+    events:[
+      {date:"10 Feb",n:"ne",type:"email",label:"Order confirmed",detail:"₹1,799 · Expected delivery: 16 Feb 2026"},
+      {date:"10 Feb",n:"ns",type:"state",label:"State → ORDER_CONFIRMED",detail:"Tavily fetches TATA CLiQ policy → returns within 10 days · refund in 7 business days"},
+      {date:"12 Feb",n:"ne",type:"email",label:"Order shipped",detail:"DTDC · Tracking: DTDC-9847261034 · ETA: 16 Feb"},
+      {date:"12 Feb",n:"ns",type:"state",label:"State → DELIVERY_EXPECTED",detail:"Countdown to expected_delivery_date = 16 Feb begins"},
+      {date:"15 Feb",n:"ne",type:"email",label:"Delivery confirmed",detail:"Delivered 15 Feb at 11:05 AM — 1 day early"},
+      {date:"15 Feb",n:"ns",type:"state",label:"State → DELIVERED",detail:"Return window: 10 days from 15 Feb = 25 Feb"},
+      {date:"17 Feb",n:"ne",type:"email",label:"Return requested",detail:"Reason: Sound quality not satisfactory · Pickup promised by: 20 Feb"},
+      {date:"17 Feb",n:"ns",type:"state",label:"State → RETURN_REQUESTED",detail:"expected_pickup_date = 20 Feb"},
+      {date:"20 Feb",n:"ne",type:"email",label:"Return picked up",detail:"Pickup confirmed 20 Feb · Refund within 7 business days → expected by 03 Mar"},
+      {date:"20 Feb",n:"ns",type:"state",label:"State → RETURN_PICKED_UP",detail:"expected_refund_date = 03 Mar (7 business days from 20 Feb, excluding Sundays)"},
+      {date:"03 Mar",n:"nok",type:"check",label:"Overdue check runs",detail:"Simulation date = 03 Mar. Expected refund = 03 Mar. Days overdue = 0.",reason:"✓ Last day of window. Not overdue yet. No alert.",rt:"rok"},
+      {date:"04 Mar",n:"nr",type:"check",label:"Overdue check runs",detail:"Simulation date = 04 Mar. Expected refund = 03 Mar. Days overdue = 1. No refund email received.",reason:"🚨 ALERT FIRED: Refund of ₹1,799 from TATA CLiQ is 1 day overdue.\nTavily fetches cliqcare@tatacliq.com as support email.\nDraft escalation email generated with order ID, pickup date, expected refund date, amount.\nSMS sent: \"Refund of ₹1,799 from TATA CLiQ overdue by 1 day. Draft escalation email ready — reply YES to send.\"",rt:"rr"}
+    ]
+  },
+  {
+    merchant:"H&M India", product:"Oversized Linen Blazer (M, Beige)", orderId:"HM-46554431832", amount:"₹3,499",
+    sc:"s2", sl:"Delivery Delayed", open:false,
+    simDate:"13 Mar 2026",
+    simNote:"Simulation date = 13 Mar 2026. Original ETA was 09 Mar. H&M proactively sent a delay notice on 09 Mar before the deadline passed — pipeline updates ETA and sends an informational SMS. No escalation needed. Item delivered on revised date.",
+    events:[
+      {date:"03 Mar",n:"ne",type:"email",label:"Order confirmed",detail:"₹3,499 · Expected delivery: 09 Mar 2026"},
+      {date:"03 Mar",n:"ns",type:"state",label:"State → ORDER_CONFIRMED",detail:"expected_delivery_date = 09 Mar"},
+      {date:"05 Mar",n:"ne",type:"email",label:"Order shipped",detail:"Delhivery · Tracking: DELHIVERY-7829103456 · ETA: 09 Mar"},
+      {date:"05 Mar",n:"ns",type:"state",label:"State → DELIVERY_EXPECTED",detail:"Countdown to 09 Mar begins"},
+      {date:"09 Mar",n:"nw",type:"email",label:"Delay notification from H&M",detail:"Reason: Logistics hub congestion. Revised ETA: 13 Mar. Voucher H&MSORRY10 offered."},
+      {date:"09 Mar",n:"ns",type:"state",label:"expected_delivery_date updated → 13 Mar",detail:"Delay reason stored. vendor_communicated = true.",reason:"ℹ SMS sent: \"H&M updated delivery ETA for Linen Blazer (HM-46554431832). New date: 13 Mar. Reason: logistics delay.\"",rt:"ri"},
+      {date:"09 Mar",n:"nok",type:"check",label:"Overdue check runs",detail:"Simulation date = 09 Mar. Updated expected delivery = 13 Mar. Days overdue = 0.",reason:"✓ Vendor communicated proactively. ETA updated. No escalation.",rt:"rok"},
+      {date:"13 Mar",n:"ne",type:"email",label:"Delivery confirmed",detail:"Delivered 13 Mar at 4:00 PM — exactly on revised ETA"},
+      {date:"13 Mar",n:"nok",type:"state",label:"State → DELIVERED ✓",detail:"Return window: 30 days from 13 Mar = 12 Apr.",reason:"✓ Delivered on revised date. No alert was needed at any stage.",rt:"rok"}
+    ]
+  },
+  {
+    merchant:"Nykaa", product:"Bioderma Sebium Gel Moussant 200ml", orderId:"NYK-339776740-6275178", amount:"₹1,259",
+    sc:"s3", sl:"Happy Path", open:false,
+    simDate:"07 Feb 2026",
+    simNote:"Simulation date = 07 Feb 2026 (delivery date). Order placed, shipped, and delivered on time. No return raised. Pipeline stays completely silent throughout — exactly as intended.",
+    events:[
+      {date:"01 Feb",n:"ne",type:"email",label:"Order confirmed",detail:"₹1,259 · Expected delivery: 07 Feb 2026"},
+      {date:"01 Feb",n:"ns",type:"state",label:"State → ORDER_CONFIRMED",detail:"Tavily fetches Nykaa policy → returns within 15 days · refund in 5–7 days. Policy found — no flag."},
+      {date:"03 Feb",n:"ne",type:"email",label:"Order shipped",detail:"Blue Dart · Tracking: 78213174723 · ETA: 07 Feb"},
+      {date:"03 Feb",n:"ns",type:"state",label:"State → DELIVERY_EXPECTED",detail:"Countdown to 07 Feb begins"},
+      {date:"07 Feb",n:"nok",type:"check",label:"Overdue check runs",detail:"Simulation date = 07 Feb. Expected delivery = 07 Feb. Days overdue = 0.",reason:"✓ Last day. Not overdue. No alert.",rt:"rok"},
+      {date:"07 Feb",n:"ne",type:"email",label:"Delivery confirmed",detail:"Delivered 07 Feb at 2:10 PM — on time"},
+      {date:"07 Feb",n:"nok",type:"state",label:"State → DELIVERED ✓",detail:"No return raised. Journey complete.",reason:"✓ Delivered on time. No return raised. Pipeline stayed silent throughout — zero alerts fired.",rt:"rok"}
+    ]
+  },
+  {
+    merchant:"Flipkart", product:"Lakme Eyeconic Kajal (Pack of 3)", orderId:"FLK-OD-129876543210", amount:"₹399",
+    sc:"s4", sl:"Refund Claimed — No Bank Credit", open:false,
+    simDate:"14 Mar 2026",
+    simNote:"Simulation date = 14 Mar 2026. Flipkart claimed refund on 08 Mar. Bank credit expected within 5 business days = by 13 Mar. Today is 14 Mar — no bank email received. Fraud flag fires.",
+    events:[
+      {date:"20 Feb",n:"ne",type:"email",label:"Order confirmed",detail:"₹399 · Expected delivery: 26 Feb"},
+      {date:"22 Feb",n:"ne",type:"email",label:"Order shipped",detail:"Ekart Logistics · ETA: 26 Feb"},
+      {date:"26 Feb",n:"ne",type:"email",label:"Delivery confirmed",detail:"Delivered 26 Feb at 12:45 PM"},
+      {date:"26 Feb",n:"ns",type:"state",label:"State → DELIVERED",detail:"Return window: 7 days from 26 Feb = 04 Mar"},
+      {date:"01 Mar",n:"ne",type:"email",label:"Return requested",detail:"Reason: One item missing from pack · Pickup promised by: 04 Mar"},
+      {date:"04 Mar",n:"ne",type:"email",label:"Return picked up",detail:"Pickup confirmed 04 Mar · Refund within 5–7 business days → by 13 Mar"},
+      {date:"04 Mar",n:"ns",type:"state",label:"State → RETURN_PICKED_UP",detail:"expected_refund_date = 13 Mar"},
+      {date:"08 Mar",n:"ne",type:"email",label:"Refund initiated by Flipkart",detail:"₹399 · Ref: FLK-REF-20260308-4891023 · Bank credit expected by 13 Mar"},
+      {date:"08 Mar",n:"ns",type:"state",label:"State → REFUND_CLAIMED",detail:"Watching inbox for bank credit email matching ₹399 and ref FLK-REF-20260308-4891023. Window closes 13 Mar."},
+      {date:"13 Mar",n:"nw",type:"check",label:"Bank credit check runs",detail:"Simulation date = 13 Mar. Days since refund claimed = 5. Bank email found? No.",reason:"⚠ Last day of window. Not yet overdue. Monitoring continues — no alert today.",rt:"rw"},
+      {date:"14 Mar",n:"nr",type:"check",label:"Bank credit check runs",detail:"Simulation date = 14 Mar. Days since refund claimed = 6. No bank email with matching amount ₹399 or ref FLK-REF-20260308-4891023 found.",reason:"🚨 FRAUD FLAG FIRED: Vendor claims refund processed — no bank credit detected after 6 days.\nSMS sent: \"Flipkart claims ₹399 was refunded on 08 Mar — no bank credit received. Possible delay or fraud. Verify with Flipkart or your bank.\"",rt:"rr"}
+    ]
+  }
+];
+
+const secondary = [
+  {
+    merchant:"Myntra", product:"Puma Men's Running Shoes (UK 8)", orderId:"MYN-2026-334821", amount:"₹2,799",
+    sc:"s5", sl:"Return Pickup Overdue", open:false,
+    simDate:"14 Mar 2026",
+    simNote:"Pickup promised by 11 Mar. Today is 14 Mar. No pickup confirmation received. 3 days overdue.",
+    events:[
+      {date:"25 Feb",n:"ne",type:"email",label:"Order confirmed",detail:"₹2,799 · Expected delivery: 03 Mar"},
+      {date:"03 Mar",n:"ne",type:"email",label:"Delivery confirmed",detail:"Delivered 03 Mar at 2:50 PM"},
+      {date:"03 Mar",n:"ns",type:"state",label:"State → DELIVERED",detail:"Return window: 15 days = 18 Mar"},
+      {date:"08 Mar",n:"ne",type:"email",label:"Return requested",detail:"Reason: Sole came off after two uses · Pickup promised by: 11 Mar"},
+      {date:"08 Mar",n:"ns",type:"state",label:"State → RETURN_REQUESTED",detail:"expected_pickup_date = 11 Mar"},
+      {date:"11 Mar",n:"nok",type:"check",label:"Pickup overdue check runs",detail:"Simulation date = 11 Mar. Expected pickup = 11 Mar. Days overdue = 0.",reason:"✓ Last day. Not overdue. No alert.",rt:"rok"},
+      {date:"14 Mar",n:"nr",type:"check",label:"Pickup overdue check runs",detail:"Simulation date = 14 Mar. Expected pickup = 11 Mar. Overdue by 3 days. No pickup confirmation email found.",reason:"🚨 ALERT FIRED: Return pickup overdue by 3 days.\nSMS sent: \"Myntra return pickup for MYN-2026-334821 was due 11 Mar — still not confirmed. Follow up on myntra.com/myorders.\"",rt:"rr"}
+    ]
+  },
+  {
+    merchant:"AJIO", product:"U.S. Polo Assn. Slim Fit Jeans (Size 32)", orderId:"AJO-UB26032601693", amount:"₹2,199",
+    sc:"s1", sl:"QC Failed — Refund Rejected", open:false,
+    simDate:"13 Mar 2026",
+    simNote:"QC rejection email arrived on 13 Mar. Pipeline surfaces it to the user immediately — no waiting for an overdue check.",
+    events:[
+      {date:"25 Feb",n:"ne",type:"email",label:"Order confirmed",detail:"₹2,199 · Expected delivery: 03 Mar"},
+      {date:"03 Mar",n:"ne",type:"email",label:"Delivery confirmed",detail:"Delivered 03 Mar at 1:40 PM"},
+      {date:"07 Mar",n:"ne",type:"email",label:"Return requested",detail:"Reason: Size mismatch · Pickup promised by: 10 Mar"},
+      {date:"10 Mar",n:"ne",type:"email",label:"Return picked up",detail:"Pickup confirmed 10 Mar. QC in progress."},
+      {date:"10 Mar",n:"ns",type:"state",label:"State → RETURN_PICKED_UP",detail:"expected_refund_date = 19 Mar (7 business days from 10 Mar)"},
+      {date:"13 Mar",n:"nr",type:"email",label:"Refund REJECTED by AJIO",detail:"QC found: visible wear, pilling on inner lining, waistband stretch. Item deemed worn. Refund denied."},
+      {date:"13 Mar",n:"nr",type:"state",label:"State → REFUND_REJECTED",detail:"No waiting — immediate surface. Dispute window: 48 hours.",reason:"🚨 IMMEDIATE ALERT: SMS sent: \"AJIO rejected your refund for Slim Fit Jeans (AJO-UB26032601693). Reason: signs of wear found during QC. Dispute within 48 hrs at care@ajio.com\"",rt:"rr"}
+    ]
+  },
+  {
+    merchant:"Amazon India", product:"Noise ColorFit Pro 5 Smartwatch (Jet Black)", orderId:"AMZ-408-7286602-5885924", amount:"₹4,299",
+    sc:"s5", sl:"Delivery Overdue — No Communication", open:false,
+    simDate:"14 Mar 2026",
+    simNote:"Expected delivery: 11 Mar. Today: 14 Mar. No delivery email, no delay notice from Amazon. 3 days of complete silence on a ₹4,299 order.",
+    events:[
+      {date:"07 Mar",n:"ne",type:"email",label:"Order confirmed",detail:"₹4,299 · Expected delivery: 11 Mar"},
+      {date:"08 Mar",n:"ne",type:"email",label:"Order shipped",detail:"Amazon Logistics · Tracking: AMZL-IN-7382910456 · ETA: 11 Mar"},
+      {date:"08 Mar",n:"ns",type:"state",label:"State → DELIVERY_EXPECTED",detail:"Countdown to 11 Mar begins"},
+      {date:"11 Mar",n:"nok",type:"check",label:"Overdue check runs",detail:"Simulation date = 11 Mar. Expected delivery = 11 Mar. Days overdue = 0.",reason:"✓ Last day. Not overdue. No alert.",rt:"rok"},
+      {date:"12 Mar",n:"nw",type:"check",label:"Overdue check runs",detail:"Simulation date = 12 Mar. 1 day overdue. Delivery email? No. Delay communication? No.",reason:"⚠ 1 day overdue. Waiting 1 more day before escalating (grace period).",rt:"rw"},
+      {date:"14 Mar",n:"nr",type:"check",label:"Overdue check runs",detail:"Simulation date = 14 Mar. 3 days overdue. Delivery email? No. Any communication? No.",reason:"🚨 ALERT FIRED: No delivery and no communication for 3 days on a ₹4,299 order.\nSMS sent: \"Amazon order for Noise Smartwatch (₹4,299) was due 11 Mar — not delivered, no update received. Consider raising a complaint at amazon.in\"",rt:"rr"}
+    ]
+  },
+  {
+    merchant:"Meesho", product:"Ethnic Printed Kurta Set (M, Mustard Yellow)", orderId:"MSH-2026-778432", amount:"₹549",
+    sc:"s5", sl:"Non-Refundable Item", open:false,
+    simDate:"12 Mar 2026",
+    simNote:"Alert fires immediately at order confirmation — the email body contains the non-returnable signal. Pipeline catches it before the item even ships.",
+    events:[
+      {date:"12 Mar",n:"ne",type:"email",label:"Order confirmed",detail:"₹549 · Estimated delivery: 18 Mar · Email body contains: \"non-returnable as per supplier policy\""},
+      {date:"12 Mar",n:"ns",type:"state",label:"State → ORDER_CONFIRMED",detail:"LLM extraction flags non_returnable = true from email body. Tavily confirms Meesho ethnic apparel policy."},
+      {date:"12 Mar",n:"nr",type:"check",label:"Policy check runs",detail:"non_returnable = true. Item not yet shipped — cancellation still possible.",reason:"🚨 IMMEDIATE ALERT: SMS sent: \"Heads up — your Meesho Ethnic Kurta Set (₹549) is non-refundable. Consider cancelling before it ships at meesho.com/orders\"",rt:"rr"}
+    ]
+  }
+];
+
+function render(j) {
+  const d = document.createElement('div');
+  d.className = 'journey' + (j.open ? ' open' : '');
+  d.innerHTML = `
+    <div class="journey-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="journey-meta">
+        <span class="merchant">${j.merchant}</span>
+        <span class="product">${j.product}</span>
+        <span class="amount">${j.amount}</span>
+        <span class="sbadge ${j.sc}">${j.sl}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="order-id-txt">${j.orderId}</span>
+        <span class="chevron">▼</span>
+      </div>
+    </div>
+    <div class="journey-body">
+      <div class="sim-note"><strong>Simulation date: ${j.simDate}</strong> — ${j.simNote}</div>
+      <div class="timeline">
+        ${j.events.map(e=>`
+          <div class="tl-item">
+            <div class="tl-date">${e.date}</div>
+            <div class="tl-spine">
+              <div class="tl-node ${e.n}">●</div>
+              <div class="tl-line"></div>
+            </div>
+            <div class="tl-content">
+              <div class="tl-label">${e.label}<span class="tag">${e.type}</span></div>
+              ${e.detail?`<div class="tl-detail">${e.detail}</div>`:''}
+              ${e.reason?`<div class="tl-reason ${e.rt}">${e.reason}</div>`:''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  return d;
+}
+
+primary.forEach(j=>document.getElementById('primary').appendChild(render(j)));
+secondary.forEach(j=>document.getElementById('secondary').appendChild(render(j)));
+</script>
+</body>
+</html>

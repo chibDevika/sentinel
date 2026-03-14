@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# Environment & secrets
+.env
+*.env
+
+# Database & runtime state
+data/orders.db
+data/pointer.json
+
+# Markdown docs (except README)
+*.md
+!README.md
+
+# Claude / AI tooling
+.claude/
+memory/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log

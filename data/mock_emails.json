@@ -1,0 +1,402 @@
+[
+  {
+    "email_id": "email_001",
+    "date": "2026-02-01T09:30:00",
+    "from": "orders@tatacliq.com",
+    "subject": "Your order for boAt Rockerz 450 is confirmed! Order ID: TCQ-141646921",
+    "body": "Hi Devika,\n\nYour order has been placed successfully on TATA CLiQ.\n\nOrder ID: TCQ-141646921\nOrder Date: 01-Feb-2026\n\nItem(s) Ordered:\n1 x boAt Rockerz 450 Bluetooth Headphones — ₹1,799\n\nDelivery Address: Devika Chib, New Delhi - 110001\nEstimated Delivery: 05-Feb-2026\n\nTotal Amount Paid: ₹1,799 (via Net Banking)\n\nTrack your order at tatacliq.com/my-orders.\n\nTeam TATA CLiQ",
+    "email_type": "order_confirmed",
+    "order_id": "TCQ-141646921",
+    "scenario": "refund_overdue"
+  },
+  {
+    "email_id": "email_002",
+    "date": "2026-02-02T08:00:00",
+    "from": "orders@tatacliq.com",
+    "subject": "Great news! Your TATA CLiQ order TCQ-141646921 has been shipped",
+    "body": "Hi Devika,\n\nYour order is on its way!\n\nOrder ID: TCQ-141646921\n\nItem(s) Shipped:\n1 x boAt Rockerz 450 Bluetooth Headphones — ₹1,799\n\nTracking Number: DTDC-9847261034\nDelivery Partner: DTDC\nEstimated Delivery: 05-Feb-2026\n\nTeam TATA CLiQ",
+    "email_type": "order_shipped",
+    "order_id": "TCQ-141646921",
+    "scenario": "refund_overdue"
+  },
+  {
+    "email_id": "email_003",
+    "date": "2026-02-05T11:00:00",
+    "from": "delivery@tatacliq.com",
+    "subject": "Delivered: Your TATA CLiQ order TCQ-141646921",
+    "body": "Hi Devika,\n\nYour order has been delivered.\n\nOrder ID: TCQ-141646921\nDelivered On: 05-Feb-2026 at 11:05 AM\n\nItem(s) Delivered:\n1 x boAt Rockerz 450 Bluetooth Headphones — ₹1,799\n\nIf you wish to return this item, you may raise a return request within 10 days of delivery.\n\nTeam TATA CLiQ",
+    "email_type": "delivery_confirmed",
+    "order_id": "TCQ-141646921",
+    "scenario": "refund_overdue"
+  },
+  {
+    "email_id": "email_004",
+    "date": "2026-02-06T09:00:00",
+    "from": "returns@tatacliq.com",
+    "subject": "Return Request Confirmed for Order TCQ-141646921",
+    "body": "Hi Devika,\n\nWe have received your return request for order TCQ-141646921.\n\nOrder ID: TCQ-141646921\nReturn Request Date: 06-Feb-2026\n\nItem(s) to be Returned:\n1 x boAt Rockerz 450 Bluetooth Headphones — ₹1,799\n\nReason for Return: Sound quality not satisfactory\n\nOur logistics partner will pick up the item from your address by 08-Feb-2026.\n\nAfter successful pickup and quality verification, your refund of ₹1,799 will be processed within 7 business days.\n\nTeam TATA CLiQ",
+    "email_type": "return_requested_confirmation",
+    "order_id": "TCQ-141646921",
+    "scenario": "refund_overdue"
+  },
+  {
+    "email_id": "email_005",
+    "date": "2026-02-08T11:00:00",
+    "from": "returns@tatacliq.com",
+    "subject": "Return Picked Up Successfully | Order TCQ-141646921",
+    "body": "Hi Devika,\n\nYour returned item has been successfully picked up by our logistics partner.\n\nOrder ID: TCQ-141646921\nPickup Date: 08-Feb-2026\n\nItem(s) Picked Up:\n1 x boAt Rockerz 450 Bluetooth Headphones — ₹1,799\n\nUpon successful quality verification, your refund of ₹1,799 will be processed within 7 business days. Expected refund by: 15-Feb-2026.\n\nThe refund will be credited to your original payment method (Net Banking).\n\nTeam TATA CLiQ",
+    "email_type": "return_pickup_confirmed",
+    "order_id": "TCQ-141646921",
+    "scenario": "refund_overdue"
+  },
+  {
+    "email_id": "check_001",
+    "date": "2026-02-16T08:00:00",
+    "from": "system@refundtracker",
+    "subject": "RefundTracker: Daily Overdue Check",
+    "body": "Automated daily overdue check. Evaluating all active orders.",
+    "email_type": "overdue_check",
+    "order_id": null,
+    "scenario": "refund_overdue"
+  },
+  {
+    "email_id": "email_006",
+    "date": "2026-02-17T10:00:00",
+    "from": "orders@nykaa.com",
+    "subject": "Order Confirmed! NYK-339776740-6275178 | Bioderma Sebium Gel Moussant 200ml",
+    "body": "Hi Devika Chib,\n\nThank you for shopping with Nykaa! Your order is confirmed.\n\nOrder ID: NYK-339776740-6275178\nOrder Date: 17-Feb-2026\n\nItem(s) Ordered:\n1 x Bioderma Sebium Gel Moussant 200ml — ₹1,259\n\nDelivery Address: Devika Chib, New Delhi - 110001\nEstimated Delivery: 21-Feb-2026\n\nTotal Amount Paid: ₹1,259 (via UPI)\n\nTrack your order anytime at nykaa.com/orders.\n\nHappy Shopping!\nTeam Nykaa",
+    "email_type": "order_confirmed",
+    "order_id": "NYK-339776740-6275178",
+    "scenario": "happy_path"
+  },
+  {
+    "email_id": "email_007",
+    "date": "2026-02-19T08:00:00",
+    "from": "orders@nykaa.com",
+    "subject": "Your Nykaa order NYK-339776740-6275178 has been shipped!",
+    "body": "Hi Devika Chib,\n\nYour order is on its way!\n\nOrder ID: NYK-339776740-6275178\n\nItem(s) Shipped:\n1 x Bioderma Sebium Gel Moussant 200ml — ₹1,259\n\nTracking Number: 78213174723\nDelivery Partner: Blue Dart\nEstimated Delivery: 21-Feb-2026\n\nTeam Nykaa",
+    "email_type": "order_shipped",
+    "order_id": "NYK-339776740-6275178",
+    "scenario": "happy_path"
+  },
+  {
+    "email_id": "email_008",
+    "date": "2026-02-21T14:15:00",
+    "from": "delivery@nykaa.com",
+    "subject": "Delivered: Your Nykaa order NYK-339776740-6275178",
+    "body": "Hi Devika Chib,\n\nYour order has been delivered successfully!\n\nOrder ID: NYK-339776740-6275178\nDelivered On: 21-Feb-2026 at 2:10 PM\n\nIf you have any issues, you can initiate a return within 15 days at nykaa.com/orders.\n\nTeam Nykaa",
+    "email_type": "delivery_confirmed",
+    "order_id": "NYK-339776740-6275178",
+    "scenario": "happy_path"
+  },
+  {
+    "email_id": "email_009",
+    "date": "2026-02-23T10:00:00",
+    "from": "returns@nykaa.com",
+    "subject": "Return Request Received for NYK-339776740-6275178 | Bioderma Sebium Gel Moussant",
+    "body": "Hi Devika Chib,\n\nWe have received your return request.\n\nOrder ID: NYK-339776740-6275178\nReturn Request Date: 23-Feb-2026\n\nItem(s) to be Returned:\n1 x Bioderma Sebium Gel Moussant 200ml — ₹1,259\n\nReason for Return: Product not as described\n\nOur courier partner will pick up the item from your address by 25-Feb-2026.\n\nOnce picked up and quality check completed, your refund of ₹1,259 will be initiated within 7 business days.\n\nTeam Nykaa",
+    "email_type": "return_requested_confirmation",
+    "order_id": "NYK-339776740-6275178",
+    "scenario": "happy_path"
+  },
+  {
+    "email_id": "email_010",
+    "date": "2026-02-25T11:30:00",
+    "from": "returns@nykaa.com",
+    "subject": "Return Picked Up! Refund on the way for NYK-339776740-6275178",
+    "body": "Hi Devika Chib,\n\nWe have successfully picked up the returned item from your address.\n\nOrder ID: NYK-339776740-6275178\nPickup Date: 25-Feb-2026\n\nItem(s) Picked Up:\n1 x Bioderma Sebium Gel Moussant 200ml — ₹1,259\n\nQuality check will be completed shortly. Your refund of ₹1,259 will be initiated within 7 business days. Expected by: 04-Mar-2026.\n\nThe refund will be credited to your original payment method (UPI).\n\nTeam Nykaa",
+    "email_type": "return_pickup_confirmed",
+    "order_id": "NYK-339776740-6275178",
+    "scenario": "happy_path"
+  },
+  {
+    "email_id": "email_011",
+    "date": "2026-03-03T09:00:00",
+    "from": "refunds@nykaa.com",
+    "subject": "Refund Initiated for Your Return | Order NYK-339776740-6275178",
+    "body": "Hi Devika Chib,\n\nGreat news! Your refund has been initiated.\n\nOrder ID: NYK-339776740-6275178\nRefund Initiation Date: 03-Mar-2026\n\nRefund Amount: ₹1,259\nRefund Method: Original Payment Method (UPI)\n\nYour refund of ₹1,259 has been processed. The amount will be credited to your UPI-linked bank account within 3-5 business days.\n\nRefund Reference Number: NKA-REF-20260303-7234891\n\nTeam Nykaa",
+    "email_type": "refund_initiated",
+    "order_id": "NYK-339776740-6275178",
+    "scenario": "happy_path"
+  },
+  {
+    "email_id": "email_012",
+    "date": "2026-03-06T15:00:00",
+    "from": "alerts@hdfcbank.com",
+    "subject": "HDFC Bank: Amount Credited to Your Account",
+    "body": "Dear Customer,\n\nINR 1,259.00 credited to your account XX4821 on 06-Mar-26. UPI Ref: NKA-REF-20260303-7234891. Available balance: INR 28,741.00\n\n- HDFC Bank",
+    "email_type": "bank_credit_alert",
+    "order_id": "NYK-339776740-6275178",
+    "scenario": "happy_path"
+  },
+  {
+    "email_id": "email_013",
+    "date": "2026-03-07T09:00:00",
+    "from": "orders@myntra.com",
+    "subject": "Order Confirmed! Puma Men's Running Shoes | MYN-2026-334821",
+    "body": "Hi Devika Chib,\n\nThank you for your order! We've got it and it's being processed.\n\nOrder ID: MYN-2026-334821\nOrder Date: 07-Mar-2026\n\nItem(s) Ordered:\n1 x Puma Men's Running Shoes (Size: UK 8) — ₹2,799\n\nDelivery Address: Devika Chib, New Delhi - 110001\nEstimated Delivery: 11-Mar-2026\n\nTotal Amount Paid: ₹2,799 (via Credit Card)\n\nTeam Myntra",
+    "email_type": "order_confirmed",
+    "order_id": "MYN-2026-334821",
+    "scenario": "return_pickup_overdue"
+  },
+  {
+    "email_id": "email_014",
+    "date": "2026-03-09T08:00:00",
+    "from": "orders@myntra.com",
+    "subject": "Your Myntra order MYN-2026-334821 is on its way!",
+    "body": "Hi Devika Chib,\n\nYour order has been shipped and is on its way to you.\n\nOrder ID: MYN-2026-334821\n\nItem(s) Shipped:\n1 x Puma Men's Running Shoes (Size: UK 8) — ₹2,799\n\nTracking Number: ECOM-4781209365\nDelivery Partner: Ecom Express\nEstimated Delivery: 11-Mar-2026\n\nTeam Myntra",
+    "email_type": "order_shipped",
+    "order_id": "MYN-2026-334821",
+    "scenario": "return_pickup_overdue"
+  },
+  {
+    "email_id": "email_015",
+    "date": "2026-03-11T15:00:00",
+    "from": "delivery@myntra.com",
+    "subject": "Delivered: Puma Men's Running Shoes | Order MYN-2026-334821",
+    "body": "Hi Devika Chib,\n\nYour Myntra order has been delivered!\n\nOrder ID: MYN-2026-334821\nDelivered On: 11-Mar-2026 at 2:50 PM\n\nIf you'd like to return or exchange this item, you can raise a request within 15 days of delivery.\n\nTeam Myntra",
+    "email_type": "delivery_confirmed",
+    "order_id": "MYN-2026-334821",
+    "scenario": "return_pickup_overdue"
+  },
+  {
+    "email_id": "email_016",
+    "date": "2026-03-13T11:00:00",
+    "from": "returns@myntra.com",
+    "subject": "Return Request Accepted for MYN-2026-334821 | Puma Running Shoes",
+    "body": "Hi Devika Chib,\n\nWe have received and accepted your return request.\n\nOrder ID: MYN-2026-334821\nReturn Request Date: 13-Mar-2026\n\nItem(s) to be Returned:\n1 x Puma Men's Running Shoes (Size: UK 8) — ₹2,799\n\nReason for Return: Sole came off after two uses\n\nOur pickup partner will collect the item from your registered address by 16-Mar-2026.\n\nTeam Myntra",
+    "email_type": "return_requested_confirmation",
+    "order_id": "MYN-2026-334821",
+    "scenario": "return_pickup_overdue"
+  },
+  {
+    "email_id": "check_002",
+    "date": "2026-03-17T08:00:00",
+    "from": "system@refundtracker",
+    "subject": "RefundTracker: Daily Overdue Check",
+    "body": "Automated daily overdue check. Evaluating all active orders.",
+    "email_type": "overdue_check",
+    "order_id": null,
+    "scenario": "return_pickup_overdue"
+  },
+  {
+    "email_id": "email_017",
+    "date": "2026-03-18T09:00:00",
+    "from": "orders@amazon.in",
+    "subject": "Order Confirmed: Noise ColorFit Pro 5 Smartwatch | AMZ-408-7286602-5885924",
+    "body": "Hi Devika Chib,\n\nThank you for shopping with Amazon India! Your order has been placed.\n\nOrder ID: AMZ-408-7286602-5885924\nOrder Date: 18-Mar-2026\n\nItem(s) Ordered:\n1 x Noise ColorFit Pro 5 Smartwatch (Jet Black) — ₹4,299\n\nDelivery Address: Devika Chib, New Delhi - 110001\nEstimated Delivery: 22-Mar-2026\n\nTotal Amount Paid: ₹4,299 (via Amazon Pay UPI)\n\nAmazon India",
+    "email_type": "order_confirmed",
+    "order_id": "AMZ-408-7286602-5885924",
+    "scenario": "delivery_overdue_no_communication"
+  },
+  {
+    "email_id": "email_018",
+    "date": "2026-03-20T08:30:00",
+    "from": "orders@amazon.in",
+    "subject": "Shipped: Noise ColorFit Pro 5 Smartwatch | Order AMZ-408-7286602-5885924",
+    "body": "Hi Devika Chib,\n\nYour order is on its way!\n\nOrder ID: AMZ-408-7286602-5885924\n\nItem(s) Shipped:\n1 x Noise ColorFit Pro 5 Smartwatch (Jet Black) — ₹4,299\n\nTracking Number: AMZL-IN-7382910456\nDelivery Partner: Amazon Logistics\nEstimated Delivery: 22-Mar-2026\n\nAmazon India",
+    "email_type": "order_shipped",
+    "order_id": "AMZ-408-7286602-5885924",
+    "scenario": "delivery_overdue_no_communication"
+  },
+  {
+    "email_id": "check_003",
+    "date": "2026-03-23T08:00:00",
+    "from": "system@refundtracker",
+    "subject": "RefundTracker: Daily Overdue Check",
+    "body": "Automated daily overdue check. Evaluating all active orders.",
+    "email_type": "overdue_check",
+    "order_id": null,
+    "scenario": "delivery_overdue_no_communication"
+  },
+  {
+    "email_id": "email_019",
+    "date": "2026-03-24T09:00:00",
+    "from": "orders@flipkart.com",
+    "subject": "Order Confirmed: Lakme Eyeconic Kajal (Pack of 3) | FLK-OD-129876543210",
+    "body": "Hi Devika Chib,\n\nYour order has been placed successfully!\n\nOrder ID: FLK-OD-129876543210\nOrder Date: 24-Mar-2026\n\nItem(s) Ordered:\n1 x Lakme Eyeconic Kajal (Pack of 3) — ₹399\n\nDelivery Address: Devika Chib, New Delhi - 110001\nEstimated Delivery: 28-Mar-2026\n\nTotal Amount Paid: ₹399 (via Flipkart UPI)\n\nTeam Flipkart",
+    "email_type": "order_confirmed",
+    "order_id": "FLK-OD-129876543210",
+    "scenario": "refund_no_bank_credit"
+  },
+  {
+    "email_id": "email_020",
+    "date": "2026-03-26T08:00:00",
+    "from": "orders@flipkart.com",
+    "subject": "Shipped: Lakme Eyeconic Kajal (Pack of 3) | Order FLK-OD-129876543210",
+    "body": "Hi Devika Chib,\n\nYour order is on its way!\n\nOrder ID: FLK-OD-129876543210\n\nItem(s) Shipped:\n1 x Lakme Eyeconic Kajal (Pack of 3) — ₹399\n\nTracking Number: EKART-789234561\nDelivery Partner: Ekart Logistics\nEstimated Delivery: 28-Mar-2026\n\nTeam Flipkart",
+    "email_type": "order_shipped",
+    "order_id": "FLK-OD-129876543210",
+    "scenario": "refund_no_bank_credit"
+  },
+  {
+    "email_id": "email_021",
+    "date": "2026-03-28T12:45:00",
+    "from": "delivery@flipkart.com",
+    "subject": "Delivered: Lakme Eyeconic Kajal | Order FLK-OD-129876543210",
+    "body": "Hi Devika Chib,\n\nYour order has been delivered!\n\nOrder ID: FLK-OD-129876543210\nDelivered On: 28-Mar-2026 at 12:45 PM\n\nIf you'd like to return this item, please raise a return request within 7 days.\n\nTeam Flipkart",
+    "email_type": "delivery_confirmed",
+    "order_id": "FLK-OD-129876543210",
+    "scenario": "refund_no_bank_credit"
+  },
+  {
+    "email_id": "email_022",
+    "date": "2026-03-30T10:00:00",
+    "from": "returns@flipkart.com",
+    "subject": "Return Request Accepted for Order FLK-OD-129876543210 | Lakme Eyeconic Kajal",
+    "body": "Hi Devika Chib,\n\nWe have accepted your return request.\n\nOrder ID: FLK-OD-129876543210\nReturn Request Date: 30-Mar-2026\n\nReason for Return: One item missing from pack\n\nOur delivery partner will pick up the item from your address by 02-Apr-2026.\n\nOnce picked up and inspected, your refund of ₹399 will be processed within 7 business days.\n\nTeam Flipkart",
+    "email_type": "return_requested_confirmation",
+    "order_id": "FLK-OD-129876543210",
+    "scenario": "refund_no_bank_credit"
+  },
+  {
+    "email_id": "email_023",
+    "date": "2026-04-02T10:00:00",
+    "from": "returns@flipkart.com",
+    "subject": "Return Picked Up! Refund Processing for Order FLK-OD-129876543210",
+    "body": "Hi Devika Chib,\n\nYour returned item has been picked up successfully!\n\nOrder ID: FLK-OD-129876543210\nPickup Date: 02-Apr-2026\n\nUpon successful quality verification, your refund of ₹399 will be processed within 7 business days. Expected refund by: 09-Apr-2026.\n\nThe refund will be credited to your original payment method (Flipkart UPI).\n\nTeam Flipkart",
+    "email_type": "return_pickup_confirmed",
+    "order_id": "FLK-OD-129876543210",
+    "scenario": "refund_no_bank_credit"
+  },
+  {
+    "email_id": "email_024",
+    "date": "2026-04-07T09:00:00",
+    "from": "refunds@flipkart.com",
+    "subject": "Refund Initiated for Order FLK-OD-129876543210 | Lakme Eyeconic Kajal",
+    "body": "Hi Devika Chib,\n\nYour refund has been initiated!\n\nOrder ID: FLK-OD-129876543210\nRefund Initiation Date: 07-Apr-2026\n\nRefund Amount: ₹399\nRefund Method: Flipkart UPI\n\nYour refund of ₹399 has been processed. The amount will be credited to your bank account in 3-5 working days.\n\nRefund Reference Number: FLK-REF-20260407-4891023\n\nTeam Flipkart",
+    "email_type": "refund_initiated",
+    "order_id": "FLK-OD-129876543210",
+    "scenario": "refund_no_bank_credit"
+  },
+  {
+    "email_id": "check_004",
+    "date": "2026-04-14T08:00:00",
+    "from": "system@refundtracker",
+    "subject": "RefundTracker: Daily Overdue Check",
+    "body": "Automated daily overdue check. Evaluating all active orders.",
+    "email_type": "overdue_check",
+    "order_id": null,
+    "scenario": "refund_no_bank_credit"
+  },
+  {
+    "email_id": "email_025",
+    "date": "2026-04-15T09:00:00",
+    "from": "orders@ajio.com",
+    "subject": "Order Confirmed: U.S. Polo Assn. Slim Fit Jeans | AJO-UB26032601693",
+    "body": "Hi Devika Chib,\n\nYour AJIO order is confirmed!\n\nOrder ID: AJO-UB26032601693\nOrder Date: 15-Apr-2026\n\nItem(s) Ordered:\n1 x U.S. Polo Assn. Slim Fit Jeans (Size: 32) — ₹2,199\n\nDelivery Address: Devika Chib, New Delhi - 110001\nEstimated Delivery: 19-Apr-2026\n\nTotal Amount Paid: ₹2,199 (via Debit Card)\n\nDress Bold!\nTeam AJIO",
+    "email_type": "order_confirmed",
+    "order_id": "AJO-UB26032601693",
+    "scenario": "qc_failed_refund_rejected"
+  },
+  {
+    "email_id": "email_026",
+    "date": "2026-04-17T08:00:00",
+    "from": "orders@ajio.com",
+    "subject": "Your AJIO order AJO-UB26032601693 has been shipped!",
+    "body": "Hi Devika Chib,\n\nYour order is on its way!\n\nOrder ID: AJO-UB26032601693\n\nItem(s) Shipped:\n1 x U.S. Polo Assn. Slim Fit Jeans (Size: 32) — ₹2,199\n\nTracking Number: XRB-5629871034\nDelivery Partner: XpressBees\nEstimated Delivery: 19-Apr-2026\n\nTeam AJIO",
+    "email_type": "order_shipped",
+    "order_id": "AJO-UB26032601693",
+    "scenario": "qc_failed_refund_rejected"
+  },
+  {
+    "email_id": "email_027",
+    "date": "2026-04-19T13:40:00",
+    "from": "delivery@ajio.com",
+    "subject": "Delivered: U.S. Polo Assn. Slim Fit Jeans | Order AJO-UB26032601693",
+    "body": "Hi Devika Chib,\n\nYour AJIO order has been delivered!\n\nOrder ID: AJO-UB26032601693\nDelivered On: 19-Apr-2026 at 1:40 PM\n\nIf you'd like to return this item, you can raise a return request within 15 days of delivery.\n\nDress Bold!\nTeam AJIO",
+    "email_type": "delivery_confirmed",
+    "order_id": "AJO-UB26032601693",
+    "scenario": "qc_failed_refund_rejected"
+  },
+  {
+    "email_id": "email_028",
+    "date": "2026-04-21T10:00:00",
+    "from": "returns@ajio.com",
+    "subject": "Return Request Received for Order AJO-UB26032601693 | U.S. Polo Assn. Jeans",
+    "body": "Hi Devika Chib,\n\nWe have received your return request.\n\nOrder ID: AJO-UB26032601693\nReturn Request Date: 21-Apr-2026\n\nItem(s) to be Returned:\n1 x U.S. Polo Assn. Slim Fit Jeans (Size: 32) — ₹2,199\n\nReason for Return: Size mismatch\n\nOur courier partner will pick up the item from your address by 23-Apr-2026.\n\nTeam AJIO",
+    "email_type": "return_requested_confirmation",
+    "order_id": "AJO-UB26032601693",
+    "scenario": "qc_failed_refund_rejected"
+  },
+  {
+    "email_id": "email_029",
+    "date": "2026-04-23T11:30:00",
+    "from": "returns@ajio.com",
+    "subject": "Return Picked Up | Order AJO-UB26032601693 — Quality Check in Progress",
+    "body": "Hi Devika Chib,\n\nYour returned item has been picked up by our logistics partner.\n\nOrder ID: AJO-UB26032601693\nPickup Date: 23-Apr-2026\n\nOur quality check team will now inspect the returned item. We'll notify you once the QC process is complete.\n\nTeam AJIO",
+    "email_type": "return_pickup_confirmed",
+    "order_id": "AJO-UB26032601693",
+    "scenario": "qc_failed_refund_rejected"
+  },
+  {
+    "email_id": "email_030",
+    "date": "2026-04-26T14:00:00",
+    "from": "returns@ajio.com",
+    "subject": "Important: Refund Request Rejected for Order AJO-UB26032601693",
+    "body": "Hi Devika Chib,\n\nWe regret to inform you that we are unable to process the refund for your returned item.\n\nOrder ID: AJO-UB26032601693\nReturn Item: U.S. Polo Assn. Slim Fit Jeans (Size: 32) — ₹2,199\nQC Inspection Date: 26-Apr-2026\n\nRejection Reason: After thorough quality inspection, it was found that the item shows visible signs of wear. As per AJIO's return policy, items that have been worn or used are not eligible for a refund.\n\nThe returned item will be shipped back to your address within 5-7 business days.\n\nIf you believe this decision is incorrect, raise a dispute within 48 hours by writing to care@ajio.com.\n\nTeam AJIO",
+    "email_type": "refund_rejected",
+    "order_id": "AJO-UB26032601693",
+    "scenario": "qc_failed_refund_rejected"
+  },
+  {
+    "email_id": "email_031",
+    "date": "2026-04-27T09:00:00",
+    "from": "orders@hm.com",
+    "subject": "Order Confirmed: Oversized Linen Blazer | HM-46554431832",
+    "body": "Hi Devika Chib,\n\nThank you for your H&M order!\n\nOrder ID: HM-46554431832\nOrder Date: 27-Apr-2026\n\nItem(s) Ordered:\n1 x Oversized Linen Blazer (Size: M, Colour: Beige) — ₹3,499\n\nDelivery Address: Devika Chib, New Delhi - 110001\nEstimated Delivery: 01-May-2026\n\nTotal Amount Paid: ₹3,499 (via Credit Card)\n\nStay Stylish!\nH&M India",
+    "email_type": "order_confirmed",
+    "order_id": "HM-46554431832",
+    "scenario": "delivery_delayed"
+  },
+  {
+    "email_id": "email_032",
+    "date": "2026-04-29T08:00:00",
+    "from": "orders@hm.com",
+    "subject": "H&M Order HM-46554431832 Shipped | Oversized Linen Blazer",
+    "body": "Hi Devika Chib,\n\nYour H&M order has been shipped!\n\nOrder ID: HM-46554431832\n\nItem(s) Shipped:\n1 x Oversized Linen Blazer (Size: M, Colour: Beige) — ₹3,499\n\nTracking Number: DELHIVERY-7829103456\nDelivery Partner: Delhivery\nEstimated Delivery: 01-May-2026\n\nStay Stylish!\nH&M India",
+    "email_type": "order_shipped",
+    "order_id": "HM-46554431832",
+    "scenario": "delivery_delayed"
+  },
+  {
+    "email_id": "email_033",
+    "date": "2026-05-01T14:00:00",
+    "from": "support@hm.com",
+    "subject": "Update on Your H&M Order HM-46554431832 — Delivery Delayed",
+    "body": "Hi Devika Chib,\n\nWe sincerely apologise for the inconvenience. There is a delay in the delivery of your H&M order.\n\nOrder ID: HM-46554431832\n\nReason for Delay: Congestion at our logistics partner's hub in your region.\n\nRevised Estimated Delivery: 04-May-2026\n\nAs an apology, we are offering you a 10% discount voucher (H&MSORRY10) on your next order.\n\nH&M India Customer Care",
+    "email_type": "delivery_delayed",
+    "order_id": "HM-46554431832",
+    "scenario": "delivery_delayed"
+  },
+  {
+    "email_id": "email_034",
+    "date": "2026-05-04T16:00:00",
+    "from": "delivery@hm.com",
+    "subject": "Delivered: Oversized Linen Blazer | H&M Order HM-46554431832",
+    "body": "Hi Devika Chib,\n\nYour H&M order has been delivered!\n\nOrder ID: HM-46554431832\nDelivered On: 04-May-2026 at 4:00 PM\n\nWe apologise again for the delay. If you'd like to return this item, you can raise a request within 30 days at hm.com/my-orders.\n\nStay Stylish!\nH&M India",
+    "email_type": "delivery_confirmed",
+    "order_id": "HM-46554431832",
+    "scenario": "delivery_delayed"
+  },
+  {
+    "email_id": "email_035",
+    "date": "2026-05-05T10:00:00",
+    "from": "orders@meesho.com",
+    "subject": "Order Confirmed! Ethnic Printed Kurta Set | MSH-2026-778432",
+    "body": "Hi Devika Chib,\n\nYour Meesho order is confirmed!\n\nOrder ID: MSH-2026-778432\nOrder Date: 05-May-2026\n\nItem(s) Ordered:\n1 x Ethnic Printed Kurta Set (Size: M, Colour: Mustard Yellow) — ₹549\n\nDelivery Address: Devika Chib, New Delhi - 110001\nEstimated Delivery: 10-May-2026\n\nTotal Amount Paid: ₹549 (via UPI)\n\nPlease note: Ethnic and printed apparel items ordered on Meesho are non-returnable as per our supplier policy.\n\nTeam Meesho",
+    "email_type": "order_confirmed",
+    "order_id": "MSH-2026-778432",
+    "scenario": "non_refundable_item"
+  },
+  {
+    "email_id": "email_036",
+    "date": "2026-05-06T10:00:00",
+    "from": "orders@shopkart.in",
+    "subject": "Order Confirmed! Wireless Earbuds Pro — SKT-2026-002918",
+    "body": "Hi Devika,\n\nYour ShopKart order is confirmed!\n\nOrder ID: SKT-2026-002918\nOrder Date: 06-May-2026\n\nItem(s) Ordered:\n1 x Wireless Earbuds Pro (True Wireless, Black) — ₹899\n\nDelivery Address: Devika Chib, New Delhi - 110001\nEstimated Delivery: 10-May-2026\n\nTotal Amount Paid: ₹899 (via UPI)\n\nShopKart — Your neighbourhood store, online!\nTeam ShopKart",
+    "email_type": "order_confirmed",
+    "order_id": "SKT-2026-002918",
+    "scenario": "no_refund_policy"
+  }
+]

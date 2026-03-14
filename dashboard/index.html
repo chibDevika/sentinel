@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sentinel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#0e0e10',
+            surface: '#18181b',
+            border: '#27272a',
+            amber: { DEFAULT: '#f59e0b' },
+            success: '#22c55e',
+            danger: '#ef4444',
+            primary: '#fafafa',
+            secondary: '#71717a',
+          },
+          fontFamily: {
+            mono: ['DM Mono', 'monospace'],
+            sans: ['DM Sans', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0e0e10; color: #fafafa; font-family: 'DM Sans', sans-serif; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse-border {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+      50%       { box-shadow: 0 0 0 4px rgba(245, 158, 11, 0); }
+    }
+    @keyframes pulse-red {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      50%       { box-shadow: 0 0 0 4px rgba(239, 68, 68, 0); }
+    }
+    .fade-in { animation: fadeInUp 0.3s ease forwards; opacity: 0; }
+    .pulse-amber { animation: pulse-border 2s infinite; }
+    .pulse-red   { animation: pulse-red 2s infinite; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #18181b; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel" src="Dashboard.jsx"></script>
+</body>
+</html>

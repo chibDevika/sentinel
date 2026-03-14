@@ -1,0 +1,15 @@
+{
+  "lastUpdated": null,
+  "summary": {
+    "total_orders": 0,
+    "active_alerts": 0,
+    "resolved": 0,
+    "pending_refund_value": 0
+  },
+  "orders": [],
+  "alerts": [],
+  "analytics": {
+    "return_rate_by_merchant": [],
+    "flagged_merchants": []
+  }
+}

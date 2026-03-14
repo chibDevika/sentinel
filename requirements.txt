@@ -1,0 +1,7 @@
+google-genai
+tavily-python
+python-dotenv
+streamlit
+pandas
+plotly
+requests
