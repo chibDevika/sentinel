@@ -2,6 +2,10 @@
 
 An agentic AI pipeline that monitors your inbox for order, delivery, return, and refund emails — and automatically tracks state, raises alerts, and drafts escalation emails when things go wrong.
 
+**Live demo:** https://web-production-ad940.up.railway.app/dashboard/index.html
+
+> **Note:** The live demo is wired to the author's personal Telegram and Gmail accounts. Telegram alerts and escalation emails are delivered to the configured accounts only — reviewers can observe all pipeline activity and draft emails directly in the dashboard.
+
 ---
 
 ## What it does
