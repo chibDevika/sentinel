@@ -32,6 +32,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().__init__(*args, directory=PROJECT_ROOT, **kwargs)
 
     def do_GET(self):
+        if self.path == '/' or self.path == '':
+            self.send_response(302)
+            self.send_header('Location', '/dashboard/index.html')
+            self.end_headers()
+            return
+
         if self.path.startswith('/api/scenarios'):
             import json as _json
             from collections import OrderedDict
