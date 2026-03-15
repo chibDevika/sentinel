@@ -21,7 +21,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-PORT = 8080
+PORT = int(os.getenv("PORT", 8080))
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 VENV_PYTHON = os.path.join(PROJECT_ROOT, '.venv', 'bin', 'python')
 MAIN_PY = os.path.join(PROJECT_ROOT, 'main.py')

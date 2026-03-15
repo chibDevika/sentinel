@@ -1,0 +1,6 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "python serve.py"
+healthcheckPath = "/dashboard/index.html"
