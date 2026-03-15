@@ -66,19 +66,25 @@ def _call_gemini(prompt: str) -> str:
     """Calls Gemini and returns the text response."""
     client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
     try:
-        response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+            config={"thinking_config": {"thinking_budget": 0}},
+        )
         return response.text.strip()
     except Exception as e:
         print(f"  [email_sender] Gemini error: {e}")
         return ""
 
 
-def draft_escalation_email(order: dict) -> dict:
+def draft_escalation_email(order: dict, reference_date=None) -> dict:
     """
     Uses Gemini to draft a refund escalation email.
+    reference_date: simulation date to use as "today" (defaults to date.today()).
     Returns {'subject': ..., 'body': ...}.
     """
-    today = date.today().isoformat()
+    today = (reference_date if reference_date else date.today()).isoformat()
+    ref = reference_date if reference_date else date.today()
     pickup_date = order.get("actual_pickup_date", "N/A")
     expected_refund_date = order.get("expected_refund_date", "N/A")
 
@@ -87,7 +93,7 @@ def draft_escalation_email(order: dict) -> dict:
         try:
             from datetime import datetime
             exp = datetime.strptime(expected_refund_date, "%Y-%m-%d").date()
-            days_overdue = str((date.today() - exp).days)
+            days_overdue = str((ref - exp).days)
         except Exception:
             pass
 
@@ -105,12 +111,14 @@ Return only the email body text (no subject line in body)."""
     return {"subject": subject, "body": body}
 
 
-def draft_complaint_email(order: dict) -> dict:
+def draft_complaint_email(order: dict, reference_date=None) -> dict:
     """
     Uses Gemini to draft a delivery complaint email.
+    reference_date: simulation date to use as "today" (defaults to date.today()).
     Returns {'subject': ..., 'body': ...}.
     """
-    today = date.today().isoformat()
+    ref = reference_date if reference_date else date.today()
+    today = ref.isoformat()
     expected_delivery_date = order.get("expected_delivery_date", "N/A")
 
     days_overdue = "unknown"
@@ -118,7 +126,7 @@ def draft_complaint_email(order: dict) -> dict:
         try:
             from datetime import datetime
             exp = datetime.strptime(expected_delivery_date, "%Y-%m-%d").date()
-            days_overdue = str((date.today() - exp).days)
+            days_overdue = str((ref - exp).days)
         except Exception:
             pass
 
@@ -135,12 +143,14 @@ Return only the email body text."""
     return {"subject": subject, "body": body}
 
 
-def draft_pickup_followup_email(order: dict) -> dict:
+def draft_pickup_followup_email(order: dict, reference_date=None) -> dict:
     """
     Uses Gemini to draft a return pickup follow-up email.
+    reference_date: simulation date to use as "today" (defaults to date.today()).
     Returns {'subject': ..., 'body': ...}.
     """
-    today = date.today().isoformat()
+    ref = reference_date if reference_date else date.today()
+    today = ref.isoformat()
     expected_pickup_date = order.get("expected_pickup_date", "N/A")
 
     days_overdue = "unknown"
@@ -148,7 +158,7 @@ def draft_pickup_followup_email(order: dict) -> dict:
         try:
             from datetime import datetime
             exp = datetime.strptime(expected_pickup_date, "%Y-%m-%d").date()
-            days_overdue = str((date.today() - exp).days)
+            days_overdue = str((ref - exp).days)
         except Exception:
             pass
 

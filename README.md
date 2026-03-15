@@ -11,25 +11,25 @@ An agentic AI pipeline that monitors your inbox for order, delivery, return, and
 - **Tracks order state** through a full lifecycle state machine (ORDER_CONFIRMED → DELIVERY_EXPECTED → DELIVERED → RETURN_PICKUP_PENDING → REFUND_PENDING → RESOLVED)
 - **Checks merchant refund policies** via Tavily web search
 - **Raises alerts** when deliveries, pickups, or refunds are overdue
-- **Drafts escalation emails** (complaint, pickup follow-up, refund escalation) using Gemini — approve and send from the dashboard
-- **Sends WhatsApp notifications** via Telegram bot when action is needed
+- **Drafts escalation emails** (complaint, pickup follow-up, refund escalation) using Gemini — approve and send from the dashboard or directly from your phone
+- **Sends Telegram notifications** with actionable inline buttons — tap "✅ Approve & Send Email" on your phone to trigger the send without opening the dashboard
 - **Visualises everything** in a React dashboard with event timelines, alert cards, and email drafts
 
 ---
 
 ## Scenarios covered
 
-| Scenario | Merchant | What it demonstrates |
-|---|---|---|
-| Happy path | Nykaa | Full order → return → refund → bank credit journey |
-| Refund overdue | TATA CLiQ | Refund not received after pickup — escalation email drafted |
-| Return pickup overdue | Myntra | Pickup slot missed — follow-up email drafted |
-| Delivery overdue (no comms) | Amazon India | No delivery, no vendor update — complaint email drafted |
-| Delivery delayed (vendor communicated) | H&M | Vendor sends delay email — logged silently, no alert |
-| Fraudulent refund claim | Flipkart | Vendor claims refund sent, no bank credit after 7 days |
-| QC fail / refund rejected | AJIO | Return rejected after quality inspection |
-| Non-refundable item | Meesho | Policy check flags item as non-returnable at order stage |
-| No refund policy found | ShopKart | Unknown merchant, policy lookup fails — alert raised |
+| Scenario                               | Merchant     | What it demonstrates                                        |
+| -------------------------------------- | ------------ | ----------------------------------------------------------- |
+| Happy path                             | Nykaa        | Full order → return → refund → bank credit journey          |
+| Refund overdue                         | TATA CLiQ    | Refund not received after pickup — escalation email drafted |
+| Return pickup overdue                  | Myntra       | Pickup slot missed — follow-up email drafted                |
+| Delivery overdue (no comms)            | Amazon India | No delivery, no vendor update — complaint email drafted     |
+| Delivery delayed (vendor communicated) | H&M          | Vendor sends delay email — logged silently, no alert        |
+| Fraudulent refund claim                | Flipkart     | Vendor claims refund sent, no bank credit after 7 days      |
+| QC fail / refund rejected              | AJIO         | Return rejected after quality inspection                    |
+| Non-refundable item                    | Meesho       | Policy check flags item as non-returnable at order stage    |
+| No refund policy found                 | ShopKart     | Unknown merchant, policy lookup fails — alert raised        |
 
 ---
 
@@ -139,15 +139,15 @@ The **Pipeline Controls** panel in the dashboard gives you the same controls wit
 
 ## How alerts work
 
-| Alert type | Trigger |
-|---|---|
-| `DELIVERY_OVERDUE` | Past expected delivery date, no delivery confirmed, no vendor comms |
-| `PICKUP_OVERDUE` | Past expected pickup date, no pickup confirmed |
-| `REFUND_OVERDUE` | Past expected refund date, no bank credit |
-| `REFUND_NO_BANK_CREDIT` | Vendor claims refund sent, >5 days with no bank credit |
-| `REFUND_REJECTED` | Merchant explicitly rejects refund |
-| `AMOUNT_MISMATCH` | Bank credit amount differs from expected refund amount |
-| `NON_REFUNDABLE` | Merchant policy flags item as non-returnable |
-| `POLICY_UNKNOWN` | No refund policy found for merchant |
+| Alert type              | Trigger                                                             |
+| ----------------------- | ------------------------------------------------------------------- |
+| `DELIVERY_OVERDUE`      | Past expected delivery date, no delivery confirmed, no vendor comms |
+| `PICKUP_OVERDUE`        | Past expected pickup date, no pickup confirmed                      |
+| `REFUND_OVERDUE`        | Past expected refund date, no bank credit                           |
+| `REFUND_NO_BANK_CREDIT` | Vendor claims refund sent, >5 days with no bank credit              |
+| `REFUND_REJECTED`       | Merchant explicitly rejects refund                                  |
+| `AMOUNT_MISMATCH`       | Bank credit amount differs from expected refund amount              |
+| `NON_REFUNDABLE`        | Merchant policy flags item as non-returnable                        |
+| `POLICY_UNKNOWN`        | No refund policy found for merchant                                 |
 
 Overdue checks run as synthetic pipeline entries — they evaluate all active orders at a specific simulation date and only log an event if a **new** alert fires (no duplicate events).

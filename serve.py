@@ -13,7 +13,13 @@ import os
 import json
 import subprocess
 import sys
+import threading
+import time
+import requests as _requests
 from urllib.parse import urlparse, parse_qs
+from dotenv import load_dotenv
+
+load_dotenv()
 
 PORT = 8080
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -74,11 +80,24 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             order_id = params.get('order_id', [''])[0]
             draft_type = params.get('draft_type', [''])[0]
 
+            print(f"\n[mark-sent] hit — order_id={repr(order_id)} draft_type={repr(draft_type)}", flush=True)
+
             if order_id and draft_type:
                 sys.path.insert(0, PROJECT_ROOT)
-                from pipeline import state_manager
+                from pipeline import state_manager, email_sender
+                draft = state_manager.get_draft(order_id, draft_type)
+                if draft and not draft.get('sent'):
+                    dry_run = os.getenv("DRY_RUN", "true").lower() == "true"
+                    print(f"[mark-sent] DRY_RUN={dry_run} | Subject: {draft.get('subject', '(none)')}", flush=True)
+                    email_sender.send_email(draft['subject'], draft['body'])
+                elif draft and draft.get('sent'):
+                    print(f"[mark-sent] Draft already marked sent — skipping send", flush=True)
+                else:
+                    print(f"[mark-sent] No draft found for order_id={order_id} draft_type={draft_type}", flush=True)
                 state_manager.mark_draft_sent(order_id, draft_type)
                 state_manager.write_dashboard_state()
+            else:
+                print(f"[mark-sent] Missing params — skipping", flush=True)
 
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
@@ -120,8 +139,89 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             super().log_message(format, *args)
 
 
+def _telegram_callback_poller():
+    """
+    Background thread: polls Telegram for callback_query updates (button taps).
+    When the user taps '✅ Approve & Send Email' on a Telegram notification,
+    this handler looks up the draft, sends the email, and marks it sent.
+    """
+    bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+    if not bot_token:
+        return
+
+    sys.path.insert(0, PROJECT_ROOT)
+    from pipeline import state_manager, email_sender
+    from pipeline.notifier import answer_callback, edit_message_text
+
+    offset = None
+    base_url = f"https://api.telegram.org/bot{bot_token}"
+
+    print("[Telegram] Callback poller started — button taps will trigger email sends.", flush=True)
+
+    while True:
+        try:
+            params = {"timeout": 20, "allowed_updates": ["callback_query"]}
+            if offset is not None:
+                params["offset"] = offset
+
+            resp = _requests.get(f"{base_url}/getUpdates", params=params, timeout=30)
+            updates = resp.json().get("result", [])
+
+            for update in updates:
+                offset = update["update_id"] + 1
+                cq = update.get("callback_query")
+                if not cq:
+                    continue
+
+                data = cq.get("data", "")
+                if not data.startswith("send|"):
+                    answer_callback(cq["id"])
+                    continue
+
+                _, order_id, draft_type = data.split("|", 2)
+                chat_id = str(cq["message"]["chat"]["id"])
+                message_id = cq["message"]["message_id"]
+
+                print(f"\n[Telegram] Button tapped — order_id={order_id} draft_type={draft_type}", flush=True)
+
+                draft = state_manager.get_draft(order_id, draft_type)
+                if not draft:
+                    answer_callback(cq["id"], "⚠️ Draft not found.")
+                    continue
+
+                if draft.get("sent"):
+                    answer_callback(cq["id"], "Email was already sent.")
+                    edit_message_text(chat_id, message_id, cq["message"]["text"] + "\n\n✅ Already sent.")
+                    continue
+
+                print(f"[Telegram] Sending email: {draft.get('subject')}", flush=True)
+                ok = email_sender.send_email(draft["subject"], draft["body"])
+                state_manager.mark_draft_sent(order_id, draft_type)
+                state_manager.write_dashboard_state()
+
+                if ok:
+                    answer_callback(cq["id"], "✅ Email sent!")
+                    edit_message_text(
+                        chat_id,
+                        message_id,
+                        cq["message"]["text"] + "\n\n✅ Email approved & sent from Telegram.",
+                    )
+                    print(f"[Telegram] ✅ Email sent and draft marked as sent.", flush=True)
+                else:
+                    answer_callback(cq["id"], "❌ Failed to send. Check server logs.")
+
+        except Exception as e:
+            print(f"[Telegram] Poller error: {e}", flush=True)
+            time.sleep(5)
+
+
 if __name__ == '__main__':
     os.chdir(PROJECT_ROOT)
+
+    # Start Telegram callback poller in background
+    t = threading.Thread(target=_telegram_callback_poller, daemon=True)
+    t.start()
+
     with socketserver.TCPServer(("", PORT), Handler) as httpd:
         print(f"\nRefundTracker dashboard running at:")
         print(f"   http://localhost:{PORT}/dashboard/index.html\n")

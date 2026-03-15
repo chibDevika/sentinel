@@ -60,7 +60,7 @@ def evaluate_order(order: dict, state_manager, notifier, email_sender, reference
                     print(f"  ℹ️  Vendor-communicated delay for {order['merchant']} (new ETA: {order.get('updated_eta')}). Logging silently.")
                 else:
                     # Agent sends complaint email
-                    draft = email_sender.draft_complaint_email(order)
+                    draft = email_sender.draft_complaint_email(order, reference_date=today)
                     state_manager.store_draft(
                         order_id, "complaint", draft["subject"], draft["body"]
                     )
@@ -68,23 +68,23 @@ def evaluate_order(order: dict, state_manager, notifier, email_sender, reference
                     if auto_send:
                         email_sender.send_email(draft["subject"], draft["body"])
                         msg = (
-                            f"[RefundTracker] No delivery from {order['merchant']} "
+                            f"No delivery from {order['merchant']} "
                             f"(overdue {(today - exp).days}d). Complaint email sent."
                         )
                     else:
                         msg = (
-                            f"[RefundTracker] No delivery from {order['merchant']} "
-                            f"(overdue {(today - exp).days}d). Approve complaint email in dashboard."
+                            f"No delivery from {order['merchant']} "
+                            f"(overdue {(today - exp).days}d). Tap below to send complaint email."
                         )
-                    notifier.send_whatsapp(msg)
-                    state_manager.add_alert(order_id, "DELIVERY_OVERDUE", msg)
+                    if state_manager.add_alert(order_id, "DELIVERY_OVERDUE", msg):
+                        notifier.send_actionable(msg, order_id, "complaint")
                     alerts.append(msg)
 
     elif state == "RETURN_PICKUP_PENDING":
         if order.get("expected_pickup_date"):
             exp = parse_date(order["expected_pickup_date"])
             if exp and today > exp:
-                draft = email_sender.draft_pickup_followup_email(order)
+                draft = email_sender.draft_pickup_followup_email(order, reference_date=today)
                 state_manager.store_draft(
                     order_id, "pickup_followup", draft["subject"], draft["body"]
                 )
@@ -92,23 +92,23 @@ def evaluate_order(order: dict, state_manager, notifier, email_sender, reference
                 if auto_send:
                     email_sender.send_email(draft["subject"], draft["body"])
                     msg = (
-                        f"[RefundTracker] Return pickup overdue for {order['product']} "
+                        f"Return pickup overdue for {order['product']} "
                         f"({order['merchant']}). Follow-up email sent."
                     )
                 else:
                     msg = (
-                        f"[RefundTracker] Return pickup overdue for {order['product']} "
-                        f"({order['merchant']}). Approve follow-up in dashboard."
+                        f"Return pickup overdue for {order['product']} "
+                        f"({order['merchant']}). Tap below to send follow-up email."
                     )
-                notifier.send_whatsapp(msg)
-                state_manager.add_alert(order_id, "PICKUP_OVERDUE", msg)
+                if state_manager.add_alert(order_id, "PICKUP_OVERDUE", msg):
+                    notifier.send_actionable(msg, order_id, "pickup_followup")
                 alerts.append(msg)
 
     elif state == "REFUND_PENDING":
         if order.get("expected_refund_date"):
             exp = parse_date(order["expected_refund_date"])
             if exp and today > exp:
-                draft = email_sender.draft_escalation_email(order)
+                draft = email_sender.draft_escalation_email(order, reference_date=today)
                 state_manager.store_draft(
                     order_id, "escalation", draft["subject"], draft["body"]
                 )
@@ -116,16 +116,16 @@ def evaluate_order(order: dict, state_manager, notifier, email_sender, reference
                 if auto_send:
                     email_sender.send_email(draft["subject"], draft["body"])
                     msg = (
-                        f"[RefundTracker] Refund of ₹{order['amount']} from {order['merchant']} "
+                        f"Refund of ₹{order['amount']} from {order['merchant']} "
                         f"overdue. Escalation email sent."
                     )
                 else:
                     msg = (
-                        f"[RefundTracker] Refund of ₹{order['amount']} from {order['merchant']} "
-                        f"overdue. Approve escalation in dashboard."
+                        f"Refund of ₹{order['amount']} from {order['merchant']} "
+                        f"overdue. Tap below to send escalation email."
                     )
-                notifier.send_whatsapp(msg)
-                state_manager.add_alert(order_id, "REFUND_OVERDUE", msg)
+                if state_manager.add_alert(order_id, "REFUND_OVERDUE", msg):
+                    notifier.send_actionable(msg, order_id, "escalation")
                 alerts.append(msg)
 
     elif state == "REFUND_CLAIMED":
@@ -134,21 +134,33 @@ def evaluate_order(order: dict, state_manager, notifier, email_sender, reference
             if claim_date:
                 days_since = (today - claim_date).days
                 if days_since > 5 and not order.get("bank_credit_date"):
-                    msg = (
-                        f"[RefundTracker] Vendor claims ₹{order['amount']} refund processed "
-                        f"({order['merchant']}) but no bank credit after {days_since} days. Verify."
+                    draft = email_sender.draft_escalation_email(order, reference_date=today)
+                    state_manager.store_draft(
+                        order_id, "escalation", draft["subject"], draft["body"]
                     )
-                    notifier.send_whatsapp(msg)
-                    state_manager.add_alert(order_id, "REFUND_NO_BANK_CREDIT", msg)
+                    auto_send = os.getenv("AUTO_SEND_EMAILS", "false").lower() == "true"
+                    if auto_send:
+                        email_sender.send_email(draft["subject"], draft["body"])
+                        msg = (
+                            f"Vendor claims ₹{order['amount']} refund processed "
+                            f"({order['merchant']}) but no bank credit after {days_since} days. Escalation sent."
+                        )
+                    else:
+                        msg = (
+                            f"Vendor claims ₹{order['amount']} refund processed "
+                            f"({order['merchant']}) but no bank credit after {days_since} days. Approve escalation in dashboard."
+                        )
+                    if state_manager.add_alert(order_id, "REFUND_NO_BANK_CREDIT", msg):
+                        notifier.send_actionable(msg, order_id, "escalation")
                     alerts.append(msg)
 
     elif state == "REFUND_REJECTED":
         msg = (
-            f"[RefundTracker] Refund rejected by {order['merchant']}: "
+            f"Refund rejected by {order['merchant']}: "
             f"{order['rejection_reason']}. Manual review needed."
         )
-        notifier.send_whatsapp(msg)
-        state_manager.add_alert(order_id, "REFUND_REJECTED", msg)
+        if state_manager.add_alert(order_id, "REFUND_REJECTED", msg):
+            notifier.send_whatsapp(msg)
         alerts.append(msg)
 
     elif state == "AMOUNT_MISMATCH":
@@ -156,20 +168,20 @@ def evaluate_order(order: dict, state_manager, notifier, email_sender, reference
         received = order.get("bank_credit_amount") or 0
         shortfall = expected - received
         msg = (
-            f"[RefundTracker] Amount mismatch from {order['merchant']}. "
+            f"Amount mismatch from {order['merchant']}. "
             f"Expected ₹{expected} but got ₹{received}. Shortfall: ₹{shortfall:.2f}."
         )
-        notifier.send_whatsapp(msg)
-        state_manager.add_alert(order_id, "AMOUNT_MISMATCH", msg)
+        if state_manager.add_alert(order_id, "AMOUNT_MISMATCH", msg):
+            notifier.send_whatsapp(msg)
         alerts.append(msg)
 
     elif state == "NON_REFUNDABLE":
         msg = (
-            f"[RefundTracker] {order['merchant']} order for {order['product']} is non-refundable. "
+            f"{order['merchant']} order for {order['product']} is non-refundable. "
             f"Consider cancelling before it ships."
         )
-        notifier.send_whatsapp(msg)
-        state_manager.add_alert(order_id, "NON_REFUNDABLE", msg)
+        if state_manager.add_alert(order_id, "NON_REFUNDABLE", msg):
+            notifier.send_whatsapp(msg)
         alerts.append(msg)
 
     return alerts

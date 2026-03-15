@@ -53,7 +53,11 @@ def extract_fields(email: dict, email_type: str) -> dict:
     )
 
     try:
-        response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+            config={"thinking_config": {"thinking_budget": 0}},
+        )
         raw = response.text.strip()
 
         # Strip markdown code fences if present

@@ -1054,7 +1054,22 @@ function AnalyticsTab({ analytics, summary, orders }) {
   const { return_rate_by_merchant = [], flagged_merchants = [] } =
     analytics || {};
 
-  const returnCount = orders.filter((o) => o.return_requested_date).length;
+  const RETURN_STATES = new Set([
+    "RETURN_REQUESTED",
+    "RETURN_PICKUP_PENDING",
+    "RETURN_PICKED_UP",
+    "REFUND_PENDING",
+    "REFUND_CLAIMED",
+    "REFUND_REJECTED",
+    "AMOUNT_MISMATCH",
+  ]);
+  const returnCount = orders.filter(
+    (o) =>
+      o.return_requested_date ||
+      o.return_pickup_date ||
+      RETURN_STATES.has(o.state) ||
+      (o.state === "RESOLVED" && o.return_pickup_date),
+  ).length;
   const returnRate =
     orders.length > 0 ? Math.round((returnCount / orders.length) * 100) : 0;
 
